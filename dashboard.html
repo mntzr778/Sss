@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <title>لوحة التحكم</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #f4f4f4;
+        }
+        .container {
+            width: 400px;
+            margin: auto;
+            padding: 20px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0px 0px 10px #ccc;
+        }
+        .btn {
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 10px;
+        }
+        .btn-gray { background: gray; }
+        .btn-yellow { background: yellow; color: black; }
+        .points {
+            font-size: 20px;
+            color: goldenrod;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h2>مرحبًا بك، <span id="username"></span>! 👋</h2>
+        <p>نقاطك الحالية: <span class="points" id="userPoints">0</span></p>
+
+        <button id="activateChannelBtn" class="btn btn-gray" onclick="activateChannel()" disabled>
+            200 نقطة مقابل 20 متابع
+        </button>
+
+        <h3>🔝 القنوات المميزة:</h3>
+        <div id="highlightedChannels"></div>
+
+        <h3>📌 اشترك في القنوات أدناه لجمع النقاط:</h3>
+        <div id="channelsList"></div>
+    </div>
+
+    <script>
+        let username = localStorage.getItem("username");
+        let userPoints = parseInt(localStorage.getItem("userPoints")) || 0;
+        let userChannel = localStorage.getItem("userChannel");
+        let usersData = JSON.parse(localStorage.getItem("usersData")) || [];
+
+        document.getElementById("username").innerText = username;
+        document.getElementById("userPoints").innerText = userPoints;
+
+        let activateChannelBtn = document.getElementById("activateChannelBtn");
+
+        function updateButtonState() {
+            if (userPoints >= 200) {
+                activateChannelBtn.classList.remove("btn-gray");
+                activateChannelBtn.classList.add("btn-yellow");
+                activateChannelBtn.disabled = false;
+            }
+        }
+
+        function activateChannel() {
+            if (userPoints >= 200) {
+                userPoints -= 200;
+                localStorage.setItem("userPoints", userPoints);
+
+                let highlightedChannels = JSON.parse(localStorage.getItem("highlightedChannels")) || [];
+                highlightedChannels.push({ link: userChannel, clicks: 0 });
+                localStorage.setItem("highlightedChannels", JSON.stringify(highlightedChannels));
+
+                updateHighlightedChannels();
+                updateButtonState();
+            }
+        }
+
+        function updateHighlightedChannels() {
+            let highlightedDiv = document.getElementById("highlightedChannels");
+            highlightedDiv.innerHTML = "";
+
+            let highlightedChannels = JSON.parse(localStorage.getItem("highlightedChannels")) || [];
+
+            highlightedChannels.forEach((channel, index) => {
+                let link = document.createElement("a");
+                link.href = channel.link;
+                link.innerText = `📌 اشترك في القناة (${channel.clicks}/20)`;
+                link.onclick = function () {
+                    highlightedChannels[index].clicks++;
+                    localStorage.setItem("highlightedChannels", JSON.stringify(highlightedChannels));
+                    updateHighlightedChannels();
+                };
+
+                if (channel.clicks >= 20) {
+                    highlightedChannels.splice(index, 1);
+                    localStorage.setItem("highlightedChannels", JSON.stringify(highlightedChannels));
+                }
+
+                highlightedDiv.appendChild(link);
+            });
+        }
+
+        updateButtonState();
+        updateHighlightedChannels();
+    </script>
+
+</body>
+</html>

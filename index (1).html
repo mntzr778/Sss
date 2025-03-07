@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <title>مشتركين تليجرام حقيقيين</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #f4f4f4;
+        }
+        .container {
+            width: 400px;
+            margin: auto;
+            padding: 20px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0px 0px 10px #ccc;
+        }
+        input, button {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+        }
+        .btn {
+            background: green;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        .description {
+            text-align: right;
+            margin-bottom: 20px;
+            font-size: 14px;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h2>مشتركين تليجرام حقيقيين</h2>
+        
+        <p class="description">
+            📌 هذا الموقع مصمم لمساعدتك في **زيادة عدد المشتركين في قناتك على تيليجرام** بطريقة **حقيقية وعادلة**.  
+            ✨ بمجرد التسجيل وإضافة رابط قناتك، يمكنك الاشتراك في القنوات الأخرى **لجمع النقاط**،  
+            ثم استبدال النقاط **بمشتركين حقيقيين** لقناتك! 🚀  
+            🔄 كل 200 نقطة تمنحك 20 متابعًا.  
+        </p>
+
+        <input type="text" id="channelLink" placeholder="ضع رابط قناتك هنا">
+        <input type="text" id="username" placeholder="اسم المستخدم">
+        <button class="btn" onclick="registerUser()">إنشاء حسابك</button>
+    </div>
+
+    <script>
+        function registerUser() {
+            let channelLink = document.getElementById("channelLink").value;
+            let username = document.getElementById("username").value;
+
+            if (!channelLink || !username) {
+                alert("يرجى إدخال جميع البيانات!");
+                return;
+            }
+
+            let usersData = JSON.parse(localStorage.getItem("usersData")) || [];
+            usersData.push({ username: username, channel: channelLink, points: 0 });
+            localStorage.setItem("usersData", JSON.stringify(usersData));
+
+            window.location.href = "dashboard.html";
+        }
+    </script>
+
+</body>
+</html>
